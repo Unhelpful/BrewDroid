@@ -40,12 +40,6 @@ public class ConversionFragment extends Fragment implements AdapterView.OnItemSe
     private TextView outTextView;
     private EditText inEditText;
 
-    ConversionFragment(int id) {
-        this.id = id;
-    }
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -61,16 +55,19 @@ public class ConversionFragment extends Fragment implements AdapterView.OnItemSe
         inEditText = (EditText) view.findViewById(R.id.valueIn);
         inEditText.addTextChangedListener(this);
         outTextView = (TextView) view.findViewById(R.id.valueOut);
-        setUnits(id, true);
+        setUnits(this.id, true);
         return view;
     }
 
     void setUnits(int id) {
-        setUnits(id, false);
+        if (this.id == -1)
+            this.id = id;
+        else
+            setUnits(id, false);
     }
 
     void setUnits(int id, boolean force) {
-        if (!force && id == this.id)
+        if (id == -1 || (!force && id == this.id))
             return;
         Measurements.Unit[] newUnits = null;
         switch(id) {
@@ -98,7 +95,6 @@ public class ConversionFragment extends Fragment implements AdapterView.OnItemSe
         }
         units.clear();
         units.addAll(Arrays.asList(newUnits));
-        if (debug) Logv("adapter contents size: %d", adapter.getCount());
         adapter.notifyDataSetChanged();
         this.id = id;
         from = newUnits[0];
@@ -136,7 +132,6 @@ public class ConversionFragment extends Fragment implements AdapterView.OnItemSe
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (debug) Logv("onTextChanged: from: %s to: %s text: %s", from, to, s);
         if (to == null || from == null)
             return;
         try {
