@@ -44,7 +44,7 @@ public class ConversionFragment extends Fragment implements AdapterView.OnItemSe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.simple_conversion, container, false);
-        adapter = new ArrayAdapter<Measurements.Unit>(getActivity(), android.R.layout.simple_spinner_item, units);
+        adapter = new UnitSpinnerAdapter(getActivity(), android.R.layout.simple_spinner_item, units);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         fromSpinner = (Spinner) view.findViewById(R.id.fromSpinner);
         fromSpinner.setAdapter(adapter);

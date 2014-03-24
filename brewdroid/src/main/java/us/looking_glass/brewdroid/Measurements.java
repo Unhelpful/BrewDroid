@@ -49,34 +49,34 @@ public class Measurements {
 
     public static interface Unit {
         double from (double value, Unit from);
-        String getAbbreviation();
-        String getDescription();
+        int getAbbreviation();
+        int getDescription();
     }
 
     enum Density implements Unit {
-        GRAVITY("SG", "specific gravity", 1, 0),
-        BRIX("\u00b0Bx", "degrees Brix", 0, 0),
-        OESCHLE("\u00b0Oe", "degrees Oeschle", 1000, -1000),
-        BAUME("\u00b0B\u00e9", "degrees Baum\u00e9", 0, 0),
-        TWADDELL("\u00b0Tw", "degrees Twaddell", 200, -200),
-        KMW("KMW", "Klosterneuburger Zuckergrade", 0, 0),
-        G_ML("g/mL", "grams per milliliter", 9.982e-1, 0),
-        G_L("g/L", "grams per liter", 9.982e2, 0),
-        KG_L("kg/L", "kilograms per liter", 9.982e-1, 0),
-        KG_M3("kg/m\u00b3", "kilograms per cubic meter", 9.982e2, 0),
-        LB_GAL_US("lb/gal (US)", "pounds per gallon (US)", 8.33038272199, 0),
-        LB_GAL_IM("lb/gal (Imp)", "pounds per gallon (Imperial)", 10.004376908931999, 0),
-        LB_FT3("lb/ft\u00b3", "pounds per cubic foot", 62.31559025095599, 0),
-        PA("PA", "potential alcohol", 0, 0),
+        GRAVITY(R.string.d_sg_a, R.string.d_sg_d, 1, 0),
+        BRIX(R.string.d_brix_a, R.string.d_brix_d, 0, 0),
+        OESCHLE(R.string.d_oeschle_a, R.string.d_oechle_d, 1000, -1000),
+        BAUME(R.string.d_baume_a, R.string.d_baume_d, 0, 0),
+        TWADDELL(R.string.d_twaddell_a, R.string.d_twaddell_d, 200, -200),
+        KMW(R.string.d_kmw_a, R.string.d_kmw_d, 0, 0),
+        G_ML(R.string.d_gml_a, R.string.d_gml_d, 9.982e-1, 0),
+        G_L(R.string.d_gl_a, R.string.d_gl_d, 9.982e2, 0),
+        KG_L(R.string.d_kgl_a, R.string.d_kgl_d, 9.982e-1, 0),
+        KG_M3(R.string.d_kgm3_a, R.string.d_kgm3_d, 9.982e2, 0),
+        LB_GAL_US(R.string.d_lbgalus_a, R.string.d_lbgalus_d, 8.33038272199, 0),
+        LB_GAL_IM(R.string.d_lbgali_a, R.string.d_lbgali_d, 10.004376908931999, 0),
+        LB_FT3(R.string.d_lbft3_a, R.string.d_lbft3_d, 62.31559025095599, 0),
+        PA(R.string.d_pa_a, R.string.d_pa_d, 0, 0),
         ;
 
 
-        private final String abbreviation;
-        private final String description;
+        private final int abbreviation;
+        private final int description;
         private final double m;
         private final double b;
 
-        Density(String abbreviation, String description, double m, double b) {
+        Density(int abbreviation, int description, double m, double b) {
             this.abbreviation = abbreviation;
             this.description = description;
             this.m = m;
@@ -157,35 +157,29 @@ public class Measurements {
         }
 
         @Override
-        public String getAbbreviation() {
+        public int getAbbreviation() {
             return abbreviation;
         }
 
         @Override
-        public String getDescription() {
+        public int getDescription() {
             return description;
-        }
-
-
-        @Override
-        public String toString() {
-            return getAbbreviation();
         }
     }
 
     enum Temperature implements Unit {
-        CELSIUS("\u00b0C", "degrees Celsius", 1, -273.15),
-        FARENHEIT("\u00b0F", "degrees Farenheit", 1.8, -459.67),
-        KELVIN("K", "Kelvin", 1, 0),
-        RANKINE("\u00b0R", "Rankine", 1.8, 0),
+        CELSIUS(R.string.t_c_a, R.string.t_c_d, 1, -273.15),
+        FARENHEIT(R.string.t_f_a, R.string.t_f_d, 1.8, -459.67),
+        KELVIN(R.string.t_k_a, R.string.t_k_d, 1, 0),
+        RANKINE(R.string.t_r_a, R.string.t_r_d, 1.8, 0),
         ;
 
-        private final String abbreviation;
-        private final String description;
+        private final int abbreviation;
+        private final int description;
         private final double m;
         private final double b;
 
-        Temperature(String abbreviation, String description, double m, double b) {
+        Temperature(int abbreviation, int description, double m, double b) {
             this.abbreviation = abbreviation;
             this.description = description;
             this.m = m;
@@ -204,18 +198,13 @@ public class Measurements {
         }
 
         @Override
-        public String getAbbreviation() {
+        public int getAbbreviation() {
             return abbreviation;
         }
 
         @Override
-        public String getDescription() {
+        public int getDescription() {
             return description;
-        }
-
-        @Override
-        public String toString() {
-            return getAbbreviation();
         }
     }
 
@@ -225,21 +214,21 @@ public class Measurements {
     private static final double sulfuric = 49.04;
 
     enum Acidity implements Unit {
-        PCT_TARTARIC("% tartaric", "percent tartaric", tartaric),
-        PCT_MALIC("% malic", "percent malic", malic),
-        PCT_CITRIC("% citric", "percent citric", citric),
-        PCT_SULFURIC("% sulfuric", "percent sulfuric", sulfuric),
-        GL_TARTARIC("g/L tartaric", "grams per liter (ppt) tartaric", tartaric * 10),
-        GL_MALIC("g/L malic", "grams per liter (ppt) malic", malic * 10),
-        GL_CITRIC("g/L citric", "grams per liter (ppt) citric", citric * 10),
-        GL_SULFURIC("g/L sulfuric", "grams per (ppt) sulfuric", sulfuric * 10),
-        MEQ_L("mEq/L", "milli-equivalent per liter", 10000);
+        PCT_TARTARIC(R.string.a_pt_a, R.string.a_pt_d, tartaric),
+        PCT_MALIC(R.string.a_pm_a, R.string.a_pm_d, malic),
+        PCT_CITRIC(R.string.a_pc_a, R.string.a_pc_d, citric),
+        PCT_SULFURIC(R.string.a_ps_a, R.string.a_ps_d, sulfuric),
+        GL_TARTARIC(R.string.a_glt_a, R.string.a_glt_d, tartaric * 10),
+        GL_MALIC(R.string.a_glm_a, R.string.a_glm_d, malic * 10),
+        GL_CITRIC(R.string.a_glc_a, R.string.a_glc_d, citric * 10),
+        GL_SULFURIC(R.string.a_gls_a, R.string.a_gls_d, sulfuric * 10),
+        MEQ_L(R.string.a_meql_a, R.string.a_meql_d, 10000);
 
-        private final String abbreviation;
-        private final String description;
+        private final int abbreviation;
+        private final int description;
         private final double m;
 
-        Acidity(String abbreviation, String description, double m) {
+        Acidity(int abbreviation, int description, double m) {
             this.abbreviation = abbreviation;
             this.description = description;
             this.m = m;
@@ -257,32 +246,27 @@ public class Measurements {
         }
 
         @Override
-        public String getAbbreviation() {
+        public int getAbbreviation() {
             return abbreviation;
         }
 
         @Override
-        public String getDescription() {
+        public int getDescription() {
             return description;
-        }
-
-        @Override
-        public String toString() {
-            return getAbbreviation();
         }
     }
 
     enum AlcoholicStrength implements Unit {
-        ABW("% ABW", "percent by weight"),
-        ABV("% ABV", "percent by volume"),
-        PROOF_US("proof (US)", "proof (US)"),
-        PROOF_UK("proof (UK)", "proof (UK)")
+        ABW(R.string.as_abw_a, R.string.as_abw_d),
+        ABV(R.string.as_abv_a, R.string.as_abv_d),
+        PROOF_US(R.string.as_pus_a, R.string.a_pus_d),
+        PROOF_UK(R.string.a_puk_a, R.string.a_puk_d)
         ;
 
-        private final String abbreviation;
-        private final String description;
+        private final int abbreviation;
+        private final int description;
 
-        AlcoholicStrength(String abbreviation, String description) {
+        AlcoholicStrength(int abbreviation, int description) {
             this.abbreviation = abbreviation;
             this.description = description;
         }
@@ -320,46 +304,41 @@ public class Measurements {
         }
 
         @Override
-        public String getAbbreviation() {
+        public int getAbbreviation() {
             return abbreviation;
         }
 
         @Override
-        public String getDescription() {
+        public int getDescription() {
             return description;
-        }
-
-        @Override
-        public String toString() {
-            return getAbbreviation();
         }
     }
 
     enum Volume implements Unit {
-        CC("cm\u00b3", "cubic centimeters", 1),
-        ML("mL", "milliliters", 1),
-        L("L", "liters", 0.001),
-        HL("hL", "hectoliters", 0.00001),
-        CM("m\u00b3", "cubic meters", 0.000001),
-        TSP("tsp", "teaspoons", 0.202884136),
-        TBSP("tbsp", "tablespoons", 0.0676280454),
-        OZ_US("oz (US)", "ounces (US)", 0.0338140227),
-        C_US("c (US)", "cups (US)", 0.00422675284),
-        PT_US("pt (US)", "pints (US)", 0.00211337642),
-        QT_US("qt (US)", "quarts (US)", 0.00105668821),
-        GAL_US("gal (US)", "gallons (US)", 0.000264172052),
-        OZ_I("oz (Imperial)", "ounces (Imperial)", 0.0351950652),
-        PT_I("pt (Imperial)", "pints (Imperial)", 0.00175975326),
-        QT_I("qt (Imperial)", "quarts (Imperial)", 0.00087987663),
-        GAL_I("gal (Imperial)", "gallons (Imperial)", 0.000219969157),
-        CI("in\u00b3", "cubic inches", 0.0610237441),
-        CF("ft\u00b3", "cubic feet", 3.53146667e-5);
+        CC(R.string.v_cm3_a, R.string.v_cm3_d, 1),
+        ML(R.string.v_ml_a, R.string.v_ml_d, 1),
+        L(R.string.v_l_a, R.string.v_l_d, 0.001),
+        HL(R.string.v_hl_a, R.string.v_hl_d, 0.00001),
+        CM(R.string.v_m3_a, R.string.v_m3_d, 0.000001),
+        TSP(R.string.v_tsp_a, R.string.v_tsp_d, 0.202884136),
+        TBSP(R.string.v_tbsp_a, R.string.v_tbsp_d, 0.0676280454),
+        OZ_US(R.string.v_ozus_a, R.string.v_ozus_d, 0.0338140227),
+        C_US(R.string.v_cus_a, R.string.v_cus_d, 0.00422675284),
+        PT_US(R.string.v_ptus_a, R.string.v_ptus_d, 0.00211337642),
+        QT_US(R.string.v_qtus_a, R.string.v_qtus_d, 0.00105668821),
+        GAL_US(R.string.v_galus_a, R.string.v_galus_d, 0.000264172052),
+        OZ_I(R.string.v_ozi_a, R.string.v_ozi_d, 0.0351950652),
+        PT_I(R.string.v_pti_a, R.string.v_pti_d, 0.00175975326),
+        QT_I(R.string.v_qti_a, R.string.v_qt_d, 0.00087987663),
+        GAL_I(R.string.v_gali_a, R.string.v_gali_d, 0.000219969157),
+        CI(R.string.v_in3_a, R.string.v_in3_d, 0.0610237441),
+        CF(R.string.v_ft3_a, R.string.v_ft3_d, 3.53146667e-5);
 
-        private final String abbreviation;
-        private final String description;
+        private final int abbreviation;
+        private final int description;
         private final double m;
 
-        Volume(String abbreviation, String description, double m) {
+        Volume(int abbreviation, int description, double m) {
             this.abbreviation = abbreviation;
             this.description = description;
             this.m = m;
@@ -377,36 +356,31 @@ public class Measurements {
         }
 
         @Override
-        public String getAbbreviation() {
+        public int getAbbreviation() {
             return abbreviation;
         }
 
         @Override
-        public String getDescription() {
+        public int getDescription() {
             return description;
-        }
-
-        @Override
-        public String toString() {
-            return getAbbreviation();
         }
     }
 
     enum Weight implements Unit {
-        MG("mg", "milligrams", 1),
-        G("g", "grams", .001),
-        KG("kg", "kilograms", .000001),
-        TONNES("t", "tonnes", .000000001),
-        GR("gr", "grains", 0.0154323584),
-        OZ("oz", "ounces", 3.5274e-5),
-        LB("lb", "pounds", 2.20462e-6),
-        TONS("T", "tones", 1.10231e-9);
+        MG(R.string.m_mg_a, R.string.m_mg_d, 1),
+        G(R.string.m_g_a, R.string.m_g_d, .001),
+        KG(R.string.m_kg_a, R.string.m_kg_d, .000001),
+        TONNES(R.string.m_tonnes_a, R.string.m_tonnes_d, .000000001),
+        GR(R.string.m_gr_a, R.string.m_gr_d, 0.0154323584),
+        OZ(R.string.m_oz_a, R.string.m_oz_d, 3.5274e-5),
+        LB(R.string.m_lb_a, R.string.m_lb_d, 2.20462e-6),
+        TONS(R.string.m_tons_a, R.string.m_tons_d, 1.10231e-9);
 
-        private final String abbreviation;
-        private final String description;
+        private final int abbreviation;
+        private final int description;
         private final double m;
 
-        Weight(String abbreviation, String description, double m) {
+        Weight(int abbreviation, int description, double m) {
             this.abbreviation = abbreviation;
             this.description = description;
             this.m = m;
@@ -424,38 +398,33 @@ public class Measurements {
         }
 
         @Override
-        public String getAbbreviation() {
+        public int getAbbreviation() {
             return abbreviation;
         }
 
         @Override
-        public String getDescription() {
+        public int getDescription() {
             return description;
-        }
-
-        @Override
-        public String toString() {
-            return getAbbreviation();
         }
     }
 
     enum Concentration implements Unit {
-        MGL("mg/L", "milligrams per liter (ppm)", 1),
-        GHL("g/hL", "grams per hectoliter", .1),
-        GL("g/L", "grams per liter (ppt)", .001),
-        GDL("g/dL", "grams per deciliter (percent)", 1e-4),
-        GML("g/mL", "grams per milliliter", 1e-6),
-        KGL("kg/L", "kilograms per liter", 1e-6),
-        GGAL("g/gal (US)", "grams per gallon (US)", 0.00378541178),
-        OZGAL("oz/gal (US)", "ounces per gallon (US)", 0.000133526471),
-        LBGAL("lb/gal (US)", "pounds per gallon (US)", 8.34540445E-6),
-        LBKGAL("lb/kgal (US)", "pounds per 1000 gallons (US)", 8.34540445E-3);
+        MGL(R.string.c_mgl_a, R.string.c_mgl_d, 1),
+        GHL(R.string.c_ghl_a, R.string.c_ghl_d, .1),
+        GL(R.string.c_gl_a, R.string.c_gl_d, .001),
+        GDL(R.string.c_gdl_a, R.string.c_gdl_d, 1e-4),
+        GML(R.string.c_gml_a, R.string.c_gml_d, 1e-6),
+        KGL(R.string.c_kgl_a, R.string.c_kgl_d, 1e-6),
+        GGAL(R.string.c_ggal_a, R.string.c_ggal_d, 0.00378541178),
+        OZGAL(R.string.c_ozgal_a, R.string.c_ozgal_d, 0.000133526471),
+        LBGAL(R.string.c_lbgal_a, R.string.c_lbgal_d, 8.34540445E-6),
+        LBKGAL(R.string.c_lbkgal_a, R.string.c_lbkgal_d, 8.34540445E-3);
 
-        private final String abbreviation;
-        private final String description;
+        private final int abbreviation;
+        private final int description;
         private final double m;
 
-        Concentration(String abbreviation, String description, double m) {
+        Concentration(int abbreviation, int description, double m) {
             this.abbreviation = abbreviation;
             this.description = description;
             this.m = m;
@@ -473,18 +442,13 @@ public class Measurements {
         }
 
         @Override
-        public String getAbbreviation() {
+        public int getAbbreviation() {
             return abbreviation;
         }
 
         @Override
-        public String getDescription() {
+        public int getDescription() {
             return description;
-        }
-
-        @Override
-        public String toString() {
-            return getAbbreviation();
         }
     }
 }
