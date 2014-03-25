@@ -3,6 +3,7 @@ package us.looking_glass.brewdroid;
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.analysis.solvers.LaguerreSolver;
 import org.apache.commons.math3.analysis.solvers.PolynomialSolver;
+import org.apache.commons.math3.exception.NoBracketingException;
 
 /**
  * Created by chshrcat on 12/13/13.
@@ -23,6 +24,23 @@ public class Measurements {
     });
     private static double minSgToBrix = brixToSG.value(-50);
     private static double maxSgToBrix = brixToSG.value(100);
+    private static PolynomialFunction RiToBrix = new PolynomialFunction(new double[]{
+            -35551.5928619409,
+            91433.0611544285,
+            -89106.07864284,
+            38966.57232,
+            -6427.26
+    });
+    private static double minRiFromBrix = 1.27255355577497;
+    private static double maxRiFromBrix = 1.54763146704752;
+    private static PolynomialFunction ZeissToRi = new PolynomialFunction(new double[] {
+            1.327338,
+            3.9347E-4,
+            -2.0446E-7
+    });
+    private static double minRiFromZeiss = ZeissToRi.value(-5);
+    private static double maxRiFromZeiss = ZeissToRi.value(105);
+
     private static PolynomialSolver solver = new LaguerreSolver();
     private static double convertLinear(double value, double m1, double m2) {
         return value / m1 * m2;
@@ -37,14 +55,18 @@ public class Measurements {
         value = (value - b1) / m1;
         return (value * m2) + b2;
     }
-    private static double sgToBrix(double in) {
-        if (in < minSgToBrix)
-            return -50;
-        else if (in >= maxSgToBrix)
-            return 100;
-        double[] coeffs = brixToSG.getCoefficients();
+    private static double inversePoly(double in, double in_min, double out_min, double in_max, double out_max, PolynomialFunction poly) {
+        if (in <= in_min)
+            return out_min;
+        if (in >= in_max)
+            return out_max;
+        double[] coeffs = poly.getCoefficients();
         coeffs[0] -= in;
-        return solver.solve(100, new PolynomialFunction(coeffs), -50, 100);
+        try {
+            return solver.solve(100, new PolynomialFunction(coeffs), out_min, out_max);
+        } catch (NoBracketingException e) {
+            return Math.abs(in - in_min) < Math.abs(in - in_max) ? out_min : out_max;
+        }
     }
 
     public static interface Unit {
@@ -145,7 +167,7 @@ public class Measurements {
                                 0;
                         break;
                     case BRIX:
-                        value = sgToBrix(value);
+                        value = inversePoly(value, minSgToBrix, maxSgToBrix, -50, 100, brixToSG);
                         break;
                     case PA:
                         value = 1000 * (value - 1) / (7.75 - 3.75 * (value - 1.007));
@@ -437,6 +459,62 @@ public class Measurements {
             if (from instanceof Concentration) {
                 Concentration c = (Concentration) from;
                 return convertLinear(value, c.m, this.m);
+            }
+            throw new IllegalArgumentException("can't convert between different dimensions");
+        }
+
+        @Override
+        public int getAbbreviation() {
+            return abbreviation;
+        }
+
+        @Override
+        public int getDescription() {
+            return description;
+        }
+    }
+
+    enum Refractivity implements Unit {
+        RI(R.string.r_ri_a, R.string.r_ri_d),
+        BRIX(R.string.r_brix_a, R.string.r_brix_d),
+        ZEISS(R.string.r_zeiss_a, R.string.r_zeiss_d)
+        ;
+
+        private final int abbreviation;
+        private final int description;
+
+        Refractivity(int abbreviation, int description) {
+            this.abbreviation = abbreviation;
+            this.description = description;
+        }
+
+        @Override
+        public double from(double value, Unit from) {
+            if (from == this)
+                return value;
+            if (from instanceof Refractivity) {
+                Refractivity r = (Refractivity) from;
+                switch(r) {
+                    case BRIX:
+                        value = inversePoly(value, -50, minRiFromBrix, 100, maxRiFromBrix, RiToBrix);
+                        break;
+                    case ZEISS:
+                        value = ZeissToRi.value(value);
+                        break;
+                    case RI:
+                        break;
+                }
+                switch(this) {
+                    case BRIX:
+                        value = RiToBrix.value(value);
+                        break;
+                    case ZEISS:
+                        value = inversePoly(value, minRiFromZeiss, -5, maxRiFromZeiss, 105, ZeissToRi);
+                        break;
+                    case RI:
+                        break;
+                }
+                return value;
             }
             throw new IllegalArgumentException("can't convert between different dimensions");
         }

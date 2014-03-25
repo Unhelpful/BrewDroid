@@ -150,5 +150,12 @@
     <string name="c_lbgal_d">pounds per gallon (US)</string>
     <string name="c_lbkgal_a">lb/kgal (US)</string>
     <string name="c_lbkgal_d">pounds per 1000 gallons (US)</string>
+    <string name="r_ri_a">RI</string>
+    <string name="r_ri_d">refractive index</string>
+    <string name="r_brix_a">°Bx</string>
+    <string name="r_brix_d">degrees Brix</string>
+    <string name="r_zeiss_a">Zeiss</string>
+    <string name="r_zeiss_d">Zeiss units</string>
+    <string name="refractivity">Refractivity</string>
 
 </resources>

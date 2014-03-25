@@ -92,6 +92,9 @@ public class ConversionFragment extends Fragment implements AdapterView.OnItemSe
             case R.string.concentration:
                 newUnits = Measurements.Concentration.values();
                 break;
+            case R.string.refractivity:
+                newUnits = Measurements.Refractivity.values();
+                break;
         }
         units.clear();
         units.addAll(Arrays.asList(newUnits));

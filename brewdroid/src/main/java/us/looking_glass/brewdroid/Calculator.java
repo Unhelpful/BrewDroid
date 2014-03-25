@@ -43,6 +43,7 @@ public class Calculator extends ActionBarActivity implements ActionBar.OnNavigat
         actionsAdapter.add(new CategorySpinnerModel(getString(R.string.volume), R.string.volume, false));
         actionsAdapter.add(new CategorySpinnerModel(getString(R.string.weight), R.string.weight, false));
         actionsAdapter.add(new CategorySpinnerModel(getString(R.string.concentration), R.string.concentration, false));
+        actionsAdapter.add(new CategorySpinnerModel(getString(R.string.refractivity), R.string.refractivity, false));
         // Set up the dropdown list navigation in the action bar.
         actionBar.setListNavigationCallbacks(
                 // Specify a SpinnerAdapter to populate the dropdown list.
@@ -103,6 +104,7 @@ public class Calculator extends ActionBarActivity implements ActionBar.OnNavigat
             case R.string.volume:
             case R.string.weight:
             case R.string.concentration:
+            case R.string.refractivity:
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 Fragment current = fragmentManager.findFragmentById(R.id.container);
                 if (!(current instanceof  ConversionFragment)) {
