@@ -1,4 +1,4 @@
-package us.looking_glass.brewdroid;
+package us.looking_glass.brewtool;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;

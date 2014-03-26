@@ -1,4 +1,4 @@
-package us.looking_glass.brewdroid;
+package us.looking_glass.brewtool;
 
 /**
  * Created by chshrcat on 12/16/13.

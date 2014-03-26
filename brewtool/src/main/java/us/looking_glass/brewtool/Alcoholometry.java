@@ -1,4 +1,4 @@
-package us.looking_glass.brewdroid;
+package us.looking_glass.brewtool;
 
 import org.apache.commons.math3.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math3.analysis.solvers.LaguerreSolver;
