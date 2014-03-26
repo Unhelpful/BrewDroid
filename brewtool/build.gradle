@@ -14,39 +14,23 @@ android {
     signingConfigs {
         release {
             // We can leave these in environment variables
-            storeFile file(System.getenv()['HOME'] + '/.keystore')
-            keyAlias 'unhelpful'
+            storeFile file(RELEASE_STORE_FILE)
+            keyAlias RELEASE_KEY_ALIAS
 
             // These two lines make gradle believe that the signingConfigs
             // section is complete. Without them, tasks like installRelease
             // will not be available!
-            storePassword "notYourRealPassword"
-            keyPassword "notYourRealPassword"
+            storePassword RELEASE_STORE_PASSWORD
+            keyPassword RELEASE_KEY_PASSWORD
         }
     }
 
     buildTypes {
         release {
             runProguard true
+            signingConfig signingConfigs.release
             proguardFile getDefaultProguardFile('proguard-android-optimize.txt')
             proguardFile 'proguard-rules.txt'
-        }
-    }
-
-    task askForPasswords << {
-        // Must create String because System.readPassword() returns char[]
-        // (and assigning that below fails silently)
-        def storePw = new String(System.console().readPassword("Keystore password: "))
-        def keyPw  = new String(System.console().readPassword("Key password: "))
-
-        android.signingConfigs.release.storePassword = storePw
-        android.signingConfigs.release.keyPassword = keyPw
-    }
-
-    def taskPattern = ~"(^|:)package.*Release\$"
-    tasks.whenTaskAdded { theTask ->
-        if (taskPattern.matcher(theTask.name)) {
-            theTask.dependsOn "askForPasswords"
         }
     }
 
