@@ -1,23 +1,39 @@
 package us.looking_glass.brewtool;
 
+import android.content.res.Configuration;
+import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
 
-public class Calculator extends ActionBarActivity implements ActionBar.OnNavigationListener {
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.AdView;
+
+public class Calculator extends ActionBarActivity implements AdapterView.OnItemClickListener {
     private final static String TAG = Calculator.class.getSimpleName();
     final static boolean debug = true;
+    private ActionBarDrawerToggle drawerToggle;
 
     /**
      * The serialization (saved instance state) Bundle key representing the
      * current dropdown position.
      */
     private static final String STATE_SELECTED_NAVIGATION_ITEM = "selected_navigation_item";
+    private AdView adView;
+
+    private NavigationListAdapter navigationAdapter;
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,51 +42,45 @@ public class Calculator extends ActionBarActivity implements ActionBar.OnNavigat
 
         // Set up the action bar to show a dropdown list.
         final ActionBar actionBar = getSupportActionBar();
-        Logd("getSupportActionBar");
-        actionBar.setDisplayShowTitleEnabled(false);
-        Logd("setDisplayShowTitleEnabled");
-        CategorySpinnerAdapter actionsAdapter = new CategorySpinnerAdapter(
-                actionBar.getThemedContext(),
-                android.R.layout.simple_list_item_1,
-                android.R.id.text1);
+
+        navigationAdapter = new NavigationListAdapter(this, R.layout.navigation_group_item, R.layout.navigation_toplevel_item, R.layout.navigation_child_item);
+        navigationAdapter.addGroup(R.string.blending);
+        navigationAdapter.addGroup(
+                R.string.convert,
+                R.string.concentration,
+                R.string.refractivity,
+                R.string.density,
+                R.string.acidity,
+                R.string.alcohol,
+                R.string.volume,
+                R.string.mass,
+                R.string.temperature
+        );
+
+        NavigationListView navView = (NavigationListView) findViewById(R.id.navigation);
+        navView.setAdapter(navigationAdapter, true);
+        navView.setOnItemClickListener(this);
+
+        drawer = (DrawerLayout) findViewById(R.id.drawer);
+
+        drawerToggle = new ActionBarDrawerToggle(this, drawer, R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
+        drawer.setDrawerListener(drawerToggle);
+
+        actionBar.setHomeButtonEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
 
         float metric = getResources().getDisplayMetrics().density;
-        actionsAdapter.add(new CategorySpinnerModel(getString(R.string.convert), 0, true));
-        actionsAdapter.add(new CategorySpinnerModel(getString(R.string.temperature), R.string.temperature, false));
-        actionsAdapter.add(new CategorySpinnerModel(getString(R.string.density), R.string.density, false));
-        actionsAdapter.add(new CategorySpinnerModel(getString(R.string.alcohol), R.string.alcohol, false));
-        actionsAdapter.add(new CategorySpinnerModel(getString(R.string.acidity), R.string.acidity, false));
-        actionsAdapter.add(new CategorySpinnerModel(getString(R.string.volume), R.string.volume, false));
-        actionsAdapter.add(new CategorySpinnerModel(getString(R.string.weight), R.string.weight, false));
-        actionsAdapter.add(new CategorySpinnerModel(getString(R.string.concentration), R.string.concentration, false));
-        actionsAdapter.add(new CategorySpinnerModel(getString(R.string.refractivity), R.string.refractivity, false));
-        // Set up the dropdown list navigation in the action bar.
-        actionBar.setListNavigationCallbacks(
-                // Specify a SpinnerAdapter to populate the dropdown list.
-                actionsAdapter,
-                this);
-        Logd("setListNavigationCallbacks");
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-        Logd("setNavigationMode");
-
+        LinearLayout topContainer = (LinearLayout) findViewById(R.id.topContainer);
+        adView = new AdView(this);
+        adView.setAdSize(AdSize.SMART_BANNER);
+        adView.setAdUnitId(Ads.adUnitId);
+        LinearLayout.LayoutParams adLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        adLayout.weight = 0;
+        adView.setLayoutParams(adLayout);
+        topContainer.addView(adView);
+        adView.loadAd(Ads.getAdRequest());
     }
-
-    @Override
-    public void onRestoreInstanceState(Bundle savedInstanceState) {
-        // Restore the previously serialized current dropdown position.
-        if (savedInstanceState.containsKey(STATE_SELECTED_NAVIGATION_ITEM)) {
-            getSupportActionBar().setSelectedNavigationItem(
-                    savedInstanceState.getInt(STATE_SELECTED_NAVIGATION_ITEM));
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        // Serialize the current dropdown position.
-        outState.putInt(STATE_SELECTED_NAVIGATION_ITEM,
-                getSupportActionBar().getSelectedNavigationIndex());
-    }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -85,6 +95,8 @@ public class Calculator extends ActionBarActivity implements ActionBar.OnNavigat
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
+        if (drawerToggle.onOptionsItemSelected(item))
+            return true;
         int id = item.getItemId();
         if (id == R.id.action_settings) {
             return true;
@@ -93,20 +105,32 @@ public class Calculator extends ActionBarActivity implements ActionBar.OnNavigat
     }
 
     @Override
-    public boolean onNavigationItemSelected(int position, long id) {
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int pos, long id) {
         // When the given dropdown item is selected, show its contents in the
         // container view.
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment current = fragmentManager.findFragmentById(R.id.container);
         switch((int) id) {
             case R.string.temperature:
             case R.string.density:
             case R.string.alcohol:
             case R.string.acidity:
             case R.string.volume:
-            case R.string.weight:
+            case R.string.mass:
             case R.string.concentration:
             case R.string.refractivity:
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                Fragment current = fragmentManager.findFragmentById(R.id.container);
                 if (!(current instanceof  ConversionFragment)) {
                     Fragment newFragment = new ConversionFragment();
                     fragmentManager.beginTransaction()
@@ -116,8 +140,14 @@ public class Calculator extends ActionBarActivity implements ActionBar.OnNavigat
                 }
                 ConversionFragment conversionFragment = (ConversionFragment) current;
                 conversionFragment.setUnits((int) id);
+                break;
+            case R.string.blending:
+                if (current != null)
+                    fragmentManager.beginTransaction()
+                        .detach(current)
+                        .commit();
         }
-        return true;
+        drawer.closeDrawer(Gravity.START);
     }
 
     private static void Logd(String text, Object... args) {

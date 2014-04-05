@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="navigation_activated" type="color">#60cccccc</item>
+    <item name="navgiation_child" type="color">#40ffffff</item>
+</resources>

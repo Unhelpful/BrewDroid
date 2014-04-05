@@ -85,7 +85,7 @@ public class ConversionFragment extends Fragment implements AdapterView.OnItemSe
             case R.string.volume:
                 newUnits = Measurements.Volume.values();
                 break;
-            case R.string.weight:
+            case R.string.mass:
                 newUnits = Measurements.Weight.values();
                 break;
             case R.string.concentration:
