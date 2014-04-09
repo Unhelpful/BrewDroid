@@ -33,32 +33,35 @@ public class NavigationListView extends ExpandableListView {
 
     public void setAdapter(ExpandableListAdapter adapter, boolean widthFromContents) {
         super.setAdapter(adapter);
-        if (widthFromContents) {
-            int maxWidth = 0;
-            int width;
-            int groupCount = adapter.getGroupCount();
-            View v;
-            for (int i = 0; i < groupCount; i++) {
-                v = adapter.getGroupView(i, false, null, this);
+        if (widthFromContents)
+            setWidthFromContents();
+    }
+
+    public void setWidthFromContents() {
+        ExpandableListAdapter adapter = getExpandableListAdapter();
+        int maxWidth = 0;
+        int width;
+        int groupCount = adapter.getGroupCount();
+        View v;
+        for (int i = 0; i < groupCount; i++) {
+            v = adapter.getGroupView(i, false, null, this);
+            v.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+            width = v.getMeasuredWidth();
+            if (width > maxWidth)
+                maxWidth = width;
+            int childrenCount = adapter.getChildrenCount(i);
+            for (int j = 0; j < childrenCount; j++) {
+                v = adapter.getChildView(i, j, false, null, this);
                 v.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
                 width = v.getMeasuredWidth();
                 if (width > maxWidth)
                     maxWidth = width;
-                int childrenCount = adapter.getChildrenCount(i);
-                for (int j = 0; j < childrenCount; j++) {
-                    v = adapter.getChildView(i, j, false, null, this);
-                    v.measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-                    width = v.getMeasuredWidth();
-                    if (width > maxWidth)
-                        maxWidth = width;
-                }
             }
-            ViewGroup.LayoutParams lp = getLayoutParams();
-            super.onMeasure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
-            maxWidth += getListPaddingLeft() + getListPaddingRight() + getVerticalScrollbarWidth();
-            lp.width = maxWidth;
         }
-    }
+        ViewGroup.LayoutParams lp = getLayoutParams();
+        super.onMeasure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
+        maxWidth += getListPaddingLeft() + getListPaddingRight() + getVerticalScrollbarWidth();
+        lp.width = maxWidth;    }
 
     @Override
     public void setOnGroupExpandListener(final OnGroupExpandListener listener) {
