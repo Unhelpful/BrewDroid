@@ -35,7 +35,6 @@ public class CheckableFrame extends FrameLayout implements Checkable {
         final int[] drawableState = super.onCreateDrawableState(extraSpace + 3);
         if (checked)
             mergeDrawableStates(drawableState, STATE_CHECKED);
-        Logd("onCreateDrawableState: new state %s", Arrays.toString(drawableState));
         return drawableState;
     }
 
@@ -46,9 +45,7 @@ public class CheckableFrame extends FrameLayout implements Checkable {
             this.checked = checked;
             refreshDrawableState();
             Drawable background = getBackground();
-            Logd("background %s state %s", background, background != null && getBackground().isStateful() ? Arrays.toString(getBackground().getState()) : "none");
         }
-        Logd("setChecked %s", checked);
     }
 
     @Override

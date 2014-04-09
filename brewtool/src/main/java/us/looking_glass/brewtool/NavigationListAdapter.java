@@ -138,7 +138,6 @@ public class NavigationListAdapter extends BaseExpandableListAdapter {
     }
 
     void addGroup(int group, int... children) {
-        Logd("addGroup %s %s", group, children);
         groups.add(new Group(group, children.length > 0 ? children : null));
     }
 
