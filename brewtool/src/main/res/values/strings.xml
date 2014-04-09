@@ -7,7 +7,7 @@
     <string name="blending">Blending</string>
     <string name="temperature">Temperature</string>
     <string name="density">Density</string>
-    <string name="alcohol">Alcoholic Strength</string>
+    <string name="alcohol">Alcohol content</string>
     <string name="acidity">Acidity</string>
     <string name="volume">Volume</string>
     <string name="mass">Mass</string>
