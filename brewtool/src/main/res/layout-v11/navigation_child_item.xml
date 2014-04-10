@@ -27,10 +27,11 @@
     />
     <ImageView
         android:id="@+id/navigationIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="21.66667dip"
+        android:layout_height="4dip"
+        android:paddingLeft="15.66667dip"
         android:scaleType="fitXY"
-        android:src="@drawable/navigation_child_gb"
+        android:src="@drawable/navigation_child"
         android:layout_marginLeft="?android:attr/expandableListPreferredItemIndicatorLeft"
         android:layout_gravity="left|center_vertical" />
 </us.looking_glass.brewtool.CheckableFrame>
