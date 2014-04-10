@@ -21,12 +21,17 @@
         android:layout_weight="1"></FrameLayout>
 
 </LinearLayout>
-    <us.looking_glass.brewtool.NavigationListView
-        android:layout_gravity="start"
+    <FrameLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:id="@+id/navigation"
-        android:choiceMode="singleChoice"
-        android:background="@drawable/left_menu_panel_holo_dark"
-        android:descendantFocusability="blocksDescendants" />
+        android:layout_gravity="start|left"
+        android:background="@drawable/left_menu_panel_holo_dark" >
+        <us.looking_glass.brewtool.NavigationListView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:id="@+id/navigation"
+            android:choiceMode="singleChoice"
+            android:descendantFocusability="blocksDescendants"
+            android:cacheColorHint="#00000000" />
+    </FrameLayout>
 </android.support.v4.widget.DrawerLayout>
