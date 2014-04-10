@@ -69,8 +69,6 @@ public class Calculator extends ActionBarActivity implements AdapterView.OnItemC
         actionBar.setHomeButtonEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-
-        float metric = getResources().getDisplayMetrics().density;
         LinearLayout topContainer = (LinearLayout) findViewById(R.id.topContainer);
         adView = new AdView(this);
         adView.setAdSize(AdSize.SMART_BANNER);
@@ -80,6 +78,33 @@ public class Calculator extends ActionBarActivity implements AdapterView.OnItemC
         adView.setLayoutParams(adLayout);
         topContainer.addView(adView);
         adView.loadAd(Ads.getAdRequest());
+    }
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @Override
+    protected void onPause() {
+        if (adView != null)
+            adView.pause();
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (adView != null)
+            adView.resume();
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        if (adView != null)
+            adView.destroy();
+        super.onDestroy();
     }
 
     @Override
@@ -102,12 +127,6 @@ public class Calculator extends ActionBarActivity implements AdapterView.OnItemC
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        drawerToggle.syncState();
     }
 
     @Override
